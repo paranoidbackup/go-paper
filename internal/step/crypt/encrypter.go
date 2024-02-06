@@ -94,7 +94,12 @@ func (e *EncrypterImpl) encryptRoundWithKeyGen(roundId int, projectId string, in
 	if err != nil {
 		return nil, err
 	}
+	publicKey, err := keyObject.GetArmoredPublicKey()
+	if err != nil {
+		return nil, err
+	}
 	return &encryptRoundWithKeyGenResult{
+		publicKey:  publicKey,
 		privateKey: privateKey,
 		passphrase: passphrase,
 		data:       data,
