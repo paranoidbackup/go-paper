@@ -9,23 +9,25 @@ type Encrypter interface {
 }
 
 type EncrypterImpl struct {
-	keyGen  KeyGenerator
-	passGen PassphraseGenerator
+	keyGenerator        KeyGenerator
+	keySplitter         KeySplitter
+	passphraseGenerator PassphraseGenerator
 }
 
 func NewEncrypter() *EncrypterImpl {
 	return &EncrypterImpl{
-		keyGen:  newKeyGenerator(),
-		passGen: newPassphraseGenerator(),
+		keyGenerator:        newKeyGenerator(),
+		keySplitter:         newKeySplitter(),
+		passphraseGenerator: newPassphraseGenerator(),
 	}
 }
 
 func (e *EncrypterImpl) Encrypt(input EncrypterInput) (*EncrypterOutput, error) {
-	passphrase, err := e.passGen.GeneratePassphrase()
+	passphrase, err := e.passphraseGenerator.GeneratePassphrase()
 	if err != nil {
 		return nil, err
 	}
-	keyObject, err := e.keyGen.GenerateKey(input.DocID(), passphrase)
+	keyObject, err := e.keyGenerator.GenerateKey(input.DocID(), passphrase)
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +35,11 @@ func (e *EncrypterImpl) Encrypt(input EncrypterInput) (*EncrypterOutput, error) 
 	if err != nil {
 		return nil, err
 	}
-	key, err := keyObject.Armor()
+	keyArmored, err := keyObject.Armor()
+	if err != nil {
+		return nil, err
+	}
+	key, err := e.keySplitter.Split(keyArmored, input.KeyShards())
 	if err != nil {
 		return nil, err
 	}

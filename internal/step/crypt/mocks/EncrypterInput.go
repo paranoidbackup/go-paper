@@ -109,6 +109,51 @@ func (_c *EncrypterInput_DocID_Call) RunAndReturn(run func() string) *EncrypterI
 	return _c
 }
 
+// KeyShards provides a mock function with given fields:
+func (_m *EncrypterInput) KeyShards() int {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for KeyShards")
+	}
+
+	var r0 int
+	if rf, ok := ret.Get(0).(func() int); ok {
+		r0 = rf()
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	return r0
+}
+
+// EncrypterInput_KeyShards_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'KeyShards'
+type EncrypterInput_KeyShards_Call struct {
+	*mock.Call
+}
+
+// KeyShards is a helper method to define mock.On call
+func (_e *EncrypterInput_Expecter) KeyShards() *EncrypterInput_KeyShards_Call {
+	return &EncrypterInput_KeyShards_Call{Call: _e.mock.On("KeyShards")}
+}
+
+func (_c *EncrypterInput_KeyShards_Call) Run(run func()) *EncrypterInput_KeyShards_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *EncrypterInput_KeyShards_Call) Return(_a0 int) *EncrypterInput_KeyShards_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *EncrypterInput_KeyShards_Call) RunAndReturn(run func() int) *EncrypterInput_KeyShards_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // NewEncrypterInput creates a new instance of EncrypterInput. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewEncrypterInput(t interface {
