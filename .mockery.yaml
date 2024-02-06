@@ -1,0 +1,11 @@
+quiet: False
+disable-version-string: True
+with-expecter: True
+mockname: "{{.InterfaceName}}"
+filename: "{{.MockName}}.go"
+outpkg: "mocks"
+dir: "mocks"
+packages:
+  go-paper/go-paper/internal/step/crypt:
+    config:
+      all: True
