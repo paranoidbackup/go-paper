@@ -39,15 +39,15 @@ func (e *EncrypterImpl) Encrypt(input EncrypterInput) (*EncrypterOutput, error) 
 	if err != nil {
 		return nil, err
 	}
-	key, err := e.keySplitter.Split(keyArmored, input.KeyShards())
+	keySplit, passphraseSplit, err := e.keySplitter.Split(keyArmored, passphrase, input.KeyShards())
 	if err != nil {
 		return nil, err
 	}
 
 	return &EncrypterOutput{
 		docID:      input.DocID(),
-		key:        key,
-		passphrase: passphrase,
+		key:        keySplit,
+		passphrase: passphraseSplit,
 		data:       data,
 	}, nil
 }
