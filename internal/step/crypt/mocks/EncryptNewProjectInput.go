@@ -64,51 +64,6 @@ func (_c *EncryptNewProjectInput_Data_Call) RunAndReturn(run func() []byte) *Enc
 	return _c
 }
 
-// ProjectID provides a mock function with given fields:
-func (_m *EncryptNewProjectInput) ProjectID() string {
-	ret := _m.Called()
-
-	if len(ret) == 0 {
-		panic("no return value specified for ProjectID")
-	}
-
-	var r0 string
-	if rf, ok := ret.Get(0).(func() string); ok {
-		r0 = rf()
-	} else {
-		r0 = ret.Get(0).(string)
-	}
-
-	return r0
-}
-
-// EncryptNewProjectInput_DocID_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ProjectID'
-type EncryptNewProjectInput_DocID_Call struct {
-	*mock.Call
-}
-
-// DocID is a helper method to define mock.On call
-func (_e *EncryptNewProjectInput_Expecter) DocID() *EncryptNewProjectInput_DocID_Call {
-	return &EncryptNewProjectInput_DocID_Call{Call: _e.mock.On("ProjectID")}
-}
-
-func (_c *EncryptNewProjectInput_DocID_Call) Run(run func()) *EncryptNewProjectInput_DocID_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run()
-	})
-	return _c
-}
-
-func (_c *EncryptNewProjectInput_DocID_Call) Return(_a0 string) *EncryptNewProjectInput_DocID_Call {
-	_c.Call.Return(_a0)
-	return _c
-}
-
-func (_c *EncryptNewProjectInput_DocID_Call) RunAndReturn(run func() string) *EncryptNewProjectInput_DocID_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
 // KeyCount provides a mock function with given fields:
 func (_m *EncryptNewProjectInput) KeyCount() int {
 	ret := _m.Called()

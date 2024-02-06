@@ -52,14 +52,14 @@ func (e *EncrypterImpl) EncryptNewProject(input EncryptNewProjectInput) (*Encryp
 	data := input.Data()
 
 	for round := 0; round < input.KeyCount(); round++ {
-		roundResult, err := e.encryptRoundWithKeyGen(round, projectId, data)
+		result, err := e.roundWithKeyGen(round, projectId, data)
 		if err != nil {
 			return nil, err
 		}
-		publicKeys = append(publicKeys, roundResult.publicKey)
-		privateKeys = append(privateKeys, roundResult.privateKey)
-		passphrases = append(passphrases, roundResult.passphrase)
-		data = roundResult.data
+		publicKeys = append(publicKeys, result.publicKey)
+		privateKeys = append(privateKeys, result.privateKey)
+		passphrases = append(passphrases, result.passphrase)
+		data = result.data
 	}
 
 	dataArmored, err := armor.ArmorWithType(data, constants.PGPMessageHeader)
@@ -77,7 +77,7 @@ func (e *EncrypterImpl) EncryptNewProject(input EncryptNewProjectInput) (*Encryp
 	}, nil
 }
 
-func (e *EncrypterImpl) encryptRoundWithKeyGen(roundId int, projectId string, inputData []byte) (*encryptRoundWithKeyGenResult, error) {
+func (e *EncrypterImpl) roundWithKeyGen(roundId int, projectId string, inputData []byte) (*encryptRoundWithKeyGenResult, error) {
 	passphrase, err := e.passGen.GeneratePassphrase()
 	if err != nil {
 		return nil, err
