@@ -1,7 +1,6 @@
 package crypt
 
-type EncrypterInput interface {
-	DocID() string
+type EncryptNewProjectInput interface {
 	KeyCount() int
 	Data() []byte
 }

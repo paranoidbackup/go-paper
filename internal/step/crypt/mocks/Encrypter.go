@@ -21,28 +21,28 @@ func (_m *Encrypter) EXPECT() *Encrypter_Expecter {
 	return &Encrypter_Expecter{mock: &_m.Mock}
 }
 
-// Encrypt provides a mock function with given fields: input
-func (_m *Encrypter) Encrypt(input crypt.EncrypterInput) (*crypt.EncrypterOutput, error) {
+// EncryptNewProject provides a mock function with given fields: input
+func (_m *Encrypter) EncryptNewProject(input crypt.EncryptNewProjectInput) (*crypt.EncryptNewProjectOutput, error) {
 	ret := _m.Called(input)
 
 	if len(ret) == 0 {
-		panic("no return value specified for Encrypt")
+		panic("no return value specified for EncryptNewProject")
 	}
 
-	var r0 *crypt.EncrypterOutput
+	var r0 *crypt.EncryptNewProjectOutput
 	var r1 error
-	if rf, ok := ret.Get(0).(func(crypt.EncrypterInput) (*crypt.EncrypterOutput, error)); ok {
+	if rf, ok := ret.Get(0).(func(crypt.EncryptNewProjectInput) (*crypt.EncryptNewProjectOutput, error)); ok {
 		return rf(input)
 	}
-	if rf, ok := ret.Get(0).(func(crypt.EncrypterInput) *crypt.EncrypterOutput); ok {
+	if rf, ok := ret.Get(0).(func(crypt.EncryptNewProjectInput) *crypt.EncryptNewProjectOutput); ok {
 		r0 = rf(input)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*crypt.EncrypterOutput)
+			r0 = ret.Get(0).(*crypt.EncryptNewProjectOutput)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(crypt.EncrypterInput) error); ok {
+	if rf, ok := ret.Get(1).(func(crypt.EncryptNewProjectInput) error); ok {
 		r1 = rf(input)
 	} else {
 		r1 = ret.Error(1)
@@ -51,30 +51,30 @@ func (_m *Encrypter) Encrypt(input crypt.EncrypterInput) (*crypt.EncrypterOutput
 	return r0, r1
 }
 
-// Encrypter_Encrypt_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Encrypt'
-type Encrypter_Encrypt_Call struct {
+// Encrypter_EncryptNewProject_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'EncryptNewProject'
+type Encrypter_EncryptNewProject_Call struct {
 	*mock.Call
 }
 
-// Encrypt is a helper method to define mock.On call
-//   - input crypt.EncrypterInput
-func (_e *Encrypter_Expecter) Encrypt(input interface{}) *Encrypter_Encrypt_Call {
-	return &Encrypter_Encrypt_Call{Call: _e.mock.On("Encrypt", input)}
+// EncryptNewProject is a helper method to define mock.On call
+//   - input crypt.EncryptNewProjectInput
+func (_e *Encrypter_Expecter) EncryptNewProject(input interface{}) *Encrypter_EncryptNewProject_Call {
+	return &Encrypter_EncryptNewProject_Call{Call: _e.mock.On("EncryptNewProject", input)}
 }
 
-func (_c *Encrypter_Encrypt_Call) Run(run func(input crypt.EncrypterInput)) *Encrypter_Encrypt_Call {
+func (_c *Encrypter_EncryptNewProject_Call) Run(run func(input crypt.EncryptNewProjectInput)) *Encrypter_EncryptNewProject_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(crypt.EncrypterInput))
+		run(args[0].(crypt.EncryptNewProjectInput))
 	})
 	return _c
 }
 
-func (_c *Encrypter_Encrypt_Call) Return(_a0 *crypt.EncrypterOutput, _a1 error) *Encrypter_Encrypt_Call {
+func (_c *Encrypter_EncryptNewProject_Call) Return(_a0 *crypt.EncryptNewProjectOutput, _a1 error) *Encrypter_EncryptNewProject_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *Encrypter_Encrypt_Call) RunAndReturn(run func(crypt.EncrypterInput) (*crypt.EncrypterOutput, error)) *Encrypter_Encrypt_Call {
+func (_c *Encrypter_EncryptNewProject_Call) RunAndReturn(run func(crypt.EncryptNewProjectInput) (*crypt.EncryptNewProjectOutput, error)) *Encrypter_EncryptNewProject_Call {
 	_c.Call.Return(run)
 	return _c
 }

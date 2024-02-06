@@ -64,12 +64,12 @@ func (_c *EncrypterInput_Data_Call) RunAndReturn(run func() []byte) *EncrypterIn
 	return _c
 }
 
-// DocID provides a mock function with given fields:
-func (_m *EncrypterInput) DocID() string {
+// ProjectID provides a mock function with given fields:
+func (_m *EncrypterInput) ProjectID() string {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("no return value specified for DocID")
+		panic("no return value specified for ProjectID")
 	}
 
 	var r0 string
@@ -82,14 +82,14 @@ func (_m *EncrypterInput) DocID() string {
 	return r0
 }
 
-// EncrypterInput_DocID_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DocID'
+// EncrypterInput_DocID_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ProjectID'
 type EncrypterInput_DocID_Call struct {
 	*mock.Call
 }
 
 // DocID is a helper method to define mock.On call
 func (_e *EncrypterInput_Expecter) DocID() *EncrypterInput_DocID_Call {
-	return &EncrypterInput_DocID_Call{Call: _e.mock.On("DocID")}
+	return &EncrypterInput_DocID_Call{Call: _e.mock.On("ProjectID")}
 }
 
 func (_c *EncrypterInput_DocID_Call) Run(run func()) *EncrypterInput_DocID_Call {
@@ -105,6 +105,98 @@ func (_c *EncrypterInput_DocID_Call) Return(_a0 string) *EncrypterInput_DocID_Ca
 }
 
 func (_c *EncrypterInput_DocID_Call) RunAndReturn(run func() string) *EncrypterInput_DocID_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// KeyCount provides a mock function with given fields:
+func (_m *EncrypterInput) KeyCount() int {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for KeyCount")
+	}
+
+	var r0 int
+	if rf, ok := ret.Get(0).(func() int); ok {
+		r0 = rf()
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	return r0
+}
+
+// EncrypterInput_KeyCount_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'KeyCount'
+type EncrypterInput_KeyCount_Call struct {
+	*mock.Call
+}
+
+// KeyCount is a helper method to define mock.On call
+func (_e *EncrypterInput_Expecter) KeyCount() *EncrypterInput_KeyCount_Call {
+	return &EncrypterInput_KeyCount_Call{Call: _e.mock.On("KeyCount")}
+}
+
+func (_c *EncrypterInput_KeyCount_Call) Run(run func()) *EncrypterInput_KeyCount_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *EncrypterInput_KeyCount_Call) Return(_a0 int) *EncrypterInput_KeyCount_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *EncrypterInput_KeyCount_Call) RunAndReturn(run func() int) *EncrypterInput_KeyCount_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// PublicKeys provides a mock function with given fields:
+func (_m *EncrypterInput) PublicKeys() []string {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for PublicKeys")
+	}
+
+	var r0 []string
+	if rf, ok := ret.Get(0).(func() []string); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]string)
+		}
+	}
+
+	return r0
+}
+
+// EncrypterInput_PublicKeys_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'PublicKeys'
+type EncrypterInput_PublicKeys_Call struct {
+	*mock.Call
+}
+
+// PublicKeys is a helper method to define mock.On call
+func (_e *EncrypterInput_Expecter) PublicKeys() *EncrypterInput_PublicKeys_Call {
+	return &EncrypterInput_PublicKeys_Call{Call: _e.mock.On("PublicKeys")}
+}
+
+func (_c *EncrypterInput_PublicKeys_Call) Run(run func()) *EncrypterInput_PublicKeys_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *EncrypterInput_PublicKeys_Call) Return(_a0 []string) *EncrypterInput_PublicKeys_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *EncrypterInput_PublicKeys_Call) RunAndReturn(run func() []string) *EncrypterInput_PublicKeys_Call {
 	_c.Call.Return(run)
 	return _c
 }

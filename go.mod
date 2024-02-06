@@ -4,6 +4,7 @@ go 1.21
 
 require (
 	github.com/ProtonMail/gopenpgp/v2 v2.7.4
+	github.com/google/uuid v1.1.2
 	github.com/spf13/cobra v1.2.1
 	github.com/stretchr/testify v1.7.0
 )

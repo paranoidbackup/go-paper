@@ -8,16 +8,18 @@ import (
 )
 
 type Encrypter interface {
-	Encrypt(input EncrypterInput) (*EncrypterOutput, error)
+	EncryptNewProject(input EncryptNewProjectInput) (*EncryptNewProjectOutput, error)
 }
 
 type EncrypterImpl struct {
 	keyGen  KeyGenerator
+	idGen   IDGenerator
 	passGen PassphraseGenerator
 }
 
-type encryptRoundResult struct {
-	key        string
+type encryptRoundWithKeyGenResult struct {
+	publicKey  string
+	privateKey string
 	passphrase string
 	data       []byte
 }
@@ -25,25 +27,37 @@ type encryptRoundResult struct {
 func NewEncrypter() *EncrypterImpl {
 	return &EncrypterImpl{
 		keyGen:  newKeyGenerator(),
+		idGen:   newIDGenerator(),
 		passGen: newPassphraseGenerator(),
 	}
 }
 
-func (e *EncrypterImpl) Encrypt(input EncrypterInput) (*EncrypterOutput, error) {
+func (e *EncrypterImpl) EncryptNewProject(input EncryptNewProjectInput) (*EncryptNewProjectOutput, error) {
 	if input.KeyCount() <= 0 {
-		return nil, fmt.Errorf("key count should be >=1, got %v", input.KeyCount())
+		return nil, fmt.Errorf("privateKey count should be >=1, got %v", input.KeyCount())
 	}
 
-	keys := make([]string, 0)
+	projectId, err := e.idGen.GenerateID()
+	if err != nil {
+		return nil, err
+	}
+	docId, err := e.idGen.GenerateID()
+	if err != nil {
+		return nil, err
+	}
+
+	publicKeys := make([]string, 0)
+	privateKeys := make([]string, 0)
 	passphrases := make([]string, 0)
 	data := input.Data()
 
 	for round := 0; round < input.KeyCount(); round++ {
-		roundResult, err := e.encryptRound(round, input.DocID(), data)
+		roundResult, err := e.encryptRoundWithKeyGen(round, projectId, data)
 		if err != nil {
 			return nil, err
 		}
-		keys = append(keys, roundResult.key)
+		publicKeys = append(publicKeys, roundResult.publicKey)
+		privateKeys = append(privateKeys, roundResult.privateKey)
 		passphrases = append(passphrases, roundResult.passphrase)
 		data = roundResult.data
 	}
@@ -53,20 +67,22 @@ func (e *EncrypterImpl) Encrypt(input EncrypterInput) (*EncrypterOutput, error) 
 		return nil, err
 	}
 
-	return &EncrypterOutput{
-		docID:      input.DocID(),
-		key:        keys,
-		passphrase: passphrases,
-		data:       dataArmored,
+	return &EncryptNewProjectOutput{
+		projectID:   projectId,
+		docID:       docId,
+		publicKeys:  publicKeys,
+		privateKeys: privateKeys,
+		passphrases: passphrases,
+		data:        dataArmored,
 	}, nil
 }
 
-func (e *EncrypterImpl) encryptRound(roundId int, docId string, inputData []byte) (*encryptRoundResult, error) {
+func (e *EncrypterImpl) encryptRoundWithKeyGen(roundId int, projectId string, inputData []byte) (*encryptRoundWithKeyGenResult, error) {
 	passphrase, err := e.passGen.GeneratePassphrase()
 	if err != nil {
 		return nil, err
 	}
-	keyObject, err := e.keyGen.GenerateKey(fmt.Sprintf("%v_%v", docId, roundId), passphrase)
+	keyObject, err := e.keyGen.GenerateKey(fmt.Sprintf("%v_%v", projectId, roundId), passphrase)
 	if err != nil {
 		return nil, err
 	}
@@ -74,12 +90,12 @@ func (e *EncrypterImpl) encryptRound(roundId int, docId string, inputData []byte
 	if err != nil {
 		return nil, err
 	}
-	key, err := keyObject.Armor()
+	privateKey, err := keyObject.Armor()
 	if err != nil {
 		return nil, err
 	}
-	return &encryptRoundResult{
-		key:        key,
+	return &encryptRoundWithKeyGenResult{
+		privateKey: privateKey,
 		passphrase: passphrase,
 		data:       data,
 	}, nil

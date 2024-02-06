@@ -1,21 +1,29 @@
 package crypt
 
-type EncrypterOutput struct {
-	docID      string
-	key        []string
-	passphrase []string
-	data       string
+type EncryptNewProjectOutput struct {
+	projectID   string
+	docID       string
+	publicKeys  []string
+	privateKeys []string
+	passphrases []string
+	data        string
 }
 
-func (b *EncrypterOutput) DocID() string {
+func (b *EncryptNewProjectOutput) ProjectID() string {
+	return b.projectID
+}
+func (b *EncryptNewProjectOutput) DocID() string {
 	return b.docID
 }
-func (b *EncrypterOutput) Key() []string {
-	return b.key
+func (b *EncryptNewProjectOutput) PublicKeys() []string {
+	return b.publicKeys
 }
-func (b *EncrypterOutput) Passphrase() []string {
-	return b.passphrase
+func (b *EncryptNewProjectOutput) PrivateKeys() []string {
+	return b.privateKeys
 }
-func (b *EncrypterOutput) Data() string {
+func (b *EncryptNewProjectOutput) Passphrases() []string {
+	return b.passphrases
+}
+func (b *EncryptNewProjectOutput) Data() string {
 	return b.data
 }
