@@ -17,9 +17,9 @@ func (_m *PassphraseGenerator) EXPECT() *PassphraseGenerator_Expecter {
 	return &PassphraseGenerator_Expecter{mock: &_m.Mock}
 }
 
-// GeneratePassphrase provides a mock function with given fields:
-func (_m *PassphraseGenerator) GeneratePassphrase() (string, error) {
-	ret := _m.Called()
+// GeneratePassphrase provides a mock function with given fields: length
+func (_m *PassphraseGenerator) GeneratePassphrase(length int) (string, error) {
+	ret := _m.Called(length)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GeneratePassphrase")
@@ -27,17 +27,17 @@ func (_m *PassphraseGenerator) GeneratePassphrase() (string, error) {
 
 	var r0 string
 	var r1 error
-	if rf, ok := ret.Get(0).(func() (string, error)); ok {
-		return rf()
+	if rf, ok := ret.Get(0).(func(int) (string, error)); ok {
+		return rf(length)
 	}
-	if rf, ok := ret.Get(0).(func() string); ok {
-		r0 = rf()
+	if rf, ok := ret.Get(0).(func(int) string); ok {
+		r0 = rf(length)
 	} else {
 		r0 = ret.Get(0).(string)
 	}
 
-	if rf, ok := ret.Get(1).(func() error); ok {
-		r1 = rf()
+	if rf, ok := ret.Get(1).(func(int) error); ok {
+		r1 = rf(length)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -51,13 +51,14 @@ type PassphraseGenerator_GeneratePassphrase_Call struct {
 }
 
 // GeneratePassphrase is a helper method to define mock.On call
-func (_e *PassphraseGenerator_Expecter) GeneratePassphrase() *PassphraseGenerator_GeneratePassphrase_Call {
-	return &PassphraseGenerator_GeneratePassphrase_Call{Call: _e.mock.On("GeneratePassphrase")}
+//   - length int
+func (_e *PassphraseGenerator_Expecter) GeneratePassphrase(length interface{}) *PassphraseGenerator_GeneratePassphrase_Call {
+	return &PassphraseGenerator_GeneratePassphrase_Call{Call: _e.mock.On("GeneratePassphrase", length)}
 }
 
-func (_c *PassphraseGenerator_GeneratePassphrase_Call) Run(run func()) *PassphraseGenerator_GeneratePassphrase_Call {
+func (_c *PassphraseGenerator_GeneratePassphrase_Call) Run(run func(length int)) *PassphraseGenerator_GeneratePassphrase_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run()
+		run(args[0].(int))
 	})
 	return _c
 }
@@ -67,7 +68,7 @@ func (_c *PassphraseGenerator_GeneratePassphrase_Call) Return(_a0 string, _a1 er
 	return _c
 }
 
-func (_c *PassphraseGenerator_GeneratePassphrase_Call) RunAndReturn(run func() (string, error)) *PassphraseGenerator_GeneratePassphrase_Call {
+func (_c *PassphraseGenerator_GeneratePassphrase_Call) RunAndReturn(run func(int) (string, error)) *PassphraseGenerator_GeneratePassphrase_Call {
 	_c.Call.Return(run)
 	return _c
 }
