@@ -73,8 +73,7 @@ func initializeWordlist(source string) (map[string]string, error) {
 
 func (g *passphraseGeneratorImpl) generateWord() string {
 	for {
-		id := g.generateId()
-		if word, exists := g.words[id]; exists {
+		if word, exists := g.words[g.generateId()]; exists {
 			return word
 		}
 	}

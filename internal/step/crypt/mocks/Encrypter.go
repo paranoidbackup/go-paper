@@ -22,23 +22,23 @@ func (_m *Encrypter) EXPECT() *Encrypter_Expecter {
 }
 
 // EncryptNewProject provides a mock function with given fields: input
-func (_m *Encrypter) EncryptNewProject(input crypt.EncryptNewProjectInput) (*crypt.EncryptNewProjectOutput, error) {
+func (_m *Encrypter) EncryptNewProject(input crypt.EncryptNewProjectInput) (*crypt.EncryptOutput, error) {
 	ret := _m.Called(input)
 
 	if len(ret) == 0 {
 		panic("no return value specified for EncryptNewProject")
 	}
 
-	var r0 *crypt.EncryptNewProjectOutput
+	var r0 *crypt.EncryptOutput
 	var r1 error
-	if rf, ok := ret.Get(0).(func(crypt.EncryptNewProjectInput) (*crypt.EncryptNewProjectOutput, error)); ok {
+	if rf, ok := ret.Get(0).(func(crypt.EncryptNewProjectInput) (*crypt.EncryptOutput, error)); ok {
 		return rf(input)
 	}
-	if rf, ok := ret.Get(0).(func(crypt.EncryptNewProjectInput) *crypt.EncryptNewProjectOutput); ok {
+	if rf, ok := ret.Get(0).(func(crypt.EncryptNewProjectInput) *crypt.EncryptOutput); ok {
 		r0 = rf(input)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*crypt.EncryptNewProjectOutput)
+			r0 = ret.Get(0).(*crypt.EncryptOutput)
 		}
 	}
 
@@ -69,12 +69,12 @@ func (_c *Encrypter_EncryptNewProject_Call) Run(run func(input crypt.EncryptNewP
 	return _c
 }
 
-func (_c *Encrypter_EncryptNewProject_Call) Return(_a0 *crypt.EncryptNewProjectOutput, _a1 error) *Encrypter_EncryptNewProject_Call {
+func (_c *Encrypter_EncryptNewProject_Call) Return(_a0 *crypt.EncryptOutput, _a1 error) *Encrypter_EncryptNewProject_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *Encrypter_EncryptNewProject_Call) RunAndReturn(run func(crypt.EncryptNewProjectInput) (*crypt.EncryptNewProjectOutput, error)) *Encrypter_EncryptNewProject_Call {
+func (_c *Encrypter_EncryptNewProject_Call) RunAndReturn(run func(crypt.EncryptNewProjectInput) (*crypt.EncryptOutput, error)) *Encrypter_EncryptNewProject_Call {
 	_c.Call.Return(run)
 	return _c
 }

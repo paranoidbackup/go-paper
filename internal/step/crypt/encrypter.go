@@ -1,6 +1,7 @@
 package crypt
 
 import (
+	"errors"
 	"fmt"
 	"github.com/ProtonMail/gopenpgp/v2/armor"
 	"github.com/ProtonMail/gopenpgp/v2/constants"
@@ -8,7 +9,8 @@ import (
 )
 
 type Encrypter interface {
-	EncryptNewProject(input EncryptNewProjectInput) (*EncryptNewProjectOutput, error)
+	Encrypt(input EncryptInput) (*EncryptOutput, error)
+	EncryptNewProject(input EncryptNewProjectInput) (*EncryptOutput, error)
 }
 
 type EncrypterImpl struct {
@@ -36,7 +38,37 @@ func NewEncrypter() (*EncrypterImpl, error) {
 	}, nil
 }
 
-func (e *EncrypterImpl) EncryptNewProject(input EncryptNewProjectInput) (*EncryptNewProjectOutput, error) {
+func (e *EncrypterImpl) Encrypt(input EncryptInput) (*EncryptOutput, error) {
+	if len(input.PublicKeys()) == 0 {
+		return nil, errors.New("no public keys provided")
+	}
+	docId, err := e.idGen.GenerateID()
+	if err != nil {
+		return nil, err
+	}
+
+	data := input.Data()
+	for _, publicKey := range input.PublicKeys() {
+		data, err = e.encryptRound(publicKey, data)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	dataArmored, err := armor.ArmorWithType(data, constants.PGPMessageHeader)
+	if err != nil {
+		return nil, err
+	}
+
+	return &EncryptOutput{
+		projectID:  input.ProjectID(),
+		docID:      docId,
+		publicKeys: input.PublicKeys(),
+		data:       dataArmored,
+	}, nil
+}
+
+func (e *EncrypterImpl) EncryptNewProject(input EncryptNewProjectInput) (*EncryptOutput, error) {
 	if input.KeyCount() <= 0 {
 		return nil, fmt.Errorf("privateKey count should be >=1, got %v", input.KeyCount())
 	}
@@ -56,7 +88,7 @@ func (e *EncrypterImpl) EncryptNewProject(input EncryptNewProjectInput) (*Encryp
 	data := input.Data()
 
 	for round := 0; round < input.KeyCount(); round++ {
-		result, err := e.roundWithKeyGen(round, projectId, data)
+		result, err := e.encryptRoundWithKeyGen(round, projectId, data)
 		if err != nil {
 			return nil, err
 		}
@@ -71,7 +103,7 @@ func (e *EncrypterImpl) EncryptNewProject(input EncryptNewProjectInput) (*Encryp
 		return nil, err
 	}
 
-	return &EncryptNewProjectOutput{
+	return &EncryptOutput{
 		projectID:   projectId,
 		docID:       docId,
 		publicKeys:  publicKeys,
@@ -81,41 +113,52 @@ func (e *EncrypterImpl) EncryptNewProject(input EncryptNewProjectInput) (*Encryp
 	}, nil
 }
 
-func (e *EncrypterImpl) roundWithKeyGen(roundId int, projectId string, inputData []byte) (*encryptRoundWithKeyGenResult, error) {
+func (e *EncrypterImpl) encryptRound(publicKeyArmored string, inputData []byte) ([]byte, error) {
+	publicKey, err := crypto.NewKeyFromArmored(publicKeyArmored)
+	if err != nil {
+		return nil, err
+	}
+	return e.doEncrypt(publicKey, inputData)
+}
+
+func (e *EncrypterImpl) encryptRoundWithKeyGen(roundId int, projectId string, inputData []byte) (*encryptRoundWithKeyGenResult, error) {
 	passphrase, err := e.passGen.GeneratePassphrase(12)
 	if err != nil {
 		return nil, err
 	}
-	keyObject, err := e.keyGen.GenerateKey(fmt.Sprintf("%v_%v", projectId, roundId), passphrase)
+	key, err := e.keyGen.GenerateKey(fmt.Sprintf("%v_%v", projectId, roundId), passphrase)
 	if err != nil {
 		return nil, err
 	}
-	data, err := e.doEncrypt(keyObject, inputData)
+	publicKey, err := key.ToPublic()
 	if err != nil {
 		return nil, err
 	}
-	privateKey, err := keyObject.Armor()
+	data, err := e.doEncrypt(publicKey, inputData)
 	if err != nil {
 		return nil, err
 	}
-	publicKey, err := keyObject.GetArmoredPublicKey()
+	privateKeyArmored, err := key.Armor()
+	if err != nil {
+		return nil, err
+	}
+	publicKeyArmored, err := publicKey.Armor()
 	if err != nil {
 		return nil, err
 	}
 	return &encryptRoundWithKeyGenResult{
-		publicKey:  publicKey,
-		privateKey: privateKey,
+		publicKey:  publicKeyArmored,
+		privateKey: privateKeyArmored,
 		passphrase: passphrase,
 		data:       data,
 	}, nil
 }
 
-func (e *EncrypterImpl) doEncrypt(key *crypto.Key, inputData []byte) ([]byte, error) {
-	message := crypto.NewPlainMessage(inputData)
-	publicKey, err := key.ToPublic()
-	if err != nil {
-		return nil, err
+func (e *EncrypterImpl) doEncrypt(publicKey *crypto.Key, inputData []byte) ([]byte, error) {
+	if len(inputData) == 0 {
+		return nil, nil
 	}
+	message := crypto.NewPlainMessage(inputData)
 	publicKeyRing, err := crypto.NewKeyRing(publicKey)
 	if err != nil {
 		return nil, err
