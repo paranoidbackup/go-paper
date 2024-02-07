@@ -1,7 +1,6 @@
 package crypt
 
 import (
-	"errors"
 	"fmt"
 	"github.com/ProtonMail/gopenpgp/v2/armor"
 	"github.com/ProtonMail/gopenpgp/v2/constants"
@@ -19,11 +18,22 @@ type EncrypterImpl struct {
 	passGen PassphraseGenerator
 }
 
-type encryptRoundWithKeyGenResult struct {
+type keyGenRoundResult struct {
 	publicKey  string
 	privateKey string
 	passphrase string
-	data       []byte
+}
+
+type encryptResult struct {
+	docId string
+	data  string
+}
+
+type createProjectResult struct {
+	projectId   string
+	publicKeys  []string
+	privateKeys []string
+	passphrases []string
 }
 
 func NewEncrypter() (*EncrypterImpl, error) {
@@ -39,45 +49,44 @@ func NewEncrypter() (*EncrypterImpl, error) {
 }
 
 func (e *EncrypterImpl) Encrypt(input EncryptInput) (*EncryptOutput, error) {
-	if len(input.PublicKeys()) == 0 {
-		return nil, errors.New("no public keys provided")
-	}
-	docId, err := e.idGen.GenerateID()
+	result, err := e.encrypt(input.PublicKeys(), input.Data())
 	if err != nil {
 		return nil, err
 	}
+	return &EncryptOutput{
+		projectID:  input.ProjectID(),
+		docID:      result.docId,
+		publicKeys: input.PublicKeys(),
+		data:       result.data,
+	}, nil
+}
 
-	data := input.Data()
-	for _, publicKey := range input.PublicKeys() {
-		data, err = e.encryptRound(publicKey, data)
-		if err != nil {
-			return nil, err
-		}
+func (e *EncrypterImpl) EncryptNewProject(input EncryptNewProjectInput) (*EncryptOutput, error) {
+	project, err := e.createProject(input.KeyCount())
+	if err != nil {
+		return nil, err
 	}
-
-	dataArmored, err := armor.ArmorWithType(data, constants.PGPMessageHeader)
+	encryptRes, err := e.encrypt(project.publicKeys, input.Data())
 	if err != nil {
 		return nil, err
 	}
 
 	return &EncryptOutput{
-		projectID:  input.ProjectID(),
-		docID:      docId,
-		publicKeys: input.PublicKeys(),
-		data:       dataArmored,
+		projectID:   project.projectId,
+		docID:       encryptRes.docId,
+		publicKeys:  project.publicKeys,
+		privateKeys: project.privateKeys,
+		passphrases: project.passphrases,
+		data:        encryptRes.data,
 	}, nil
 }
 
-func (e *EncrypterImpl) EncryptNewProject(input EncryptNewProjectInput) (*EncryptOutput, error) {
-	if input.KeyCount() <= 0 {
-		return nil, fmt.Errorf("privateKey count should be >=1, got %v", input.KeyCount())
+func (e *EncrypterImpl) createProject(keyCount int) (*createProjectResult, error) {
+	if keyCount <= 0 {
+		return nil, fmt.Errorf("privateKey count should be >=1, got %v", keyCount)
 	}
 
 	projectId, err := e.idGen.GenerateID()
-	if err != nil {
-		return nil, err
-	}
-	docId, err := e.idGen.GenerateID()
 	if err != nil {
 		return nil, err
 	}
@@ -85,78 +94,56 @@ func (e *EncrypterImpl) EncryptNewProject(input EncryptNewProjectInput) (*Encryp
 	publicKeys := make([]string, 0)
 	privateKeys := make([]string, 0)
 	passphrases := make([]string, 0)
-	data := input.Data()
 
-	for round := 0; round < input.KeyCount(); round++ {
-		result, err := e.encryptRoundWithKeyGen(round, projectId, data)
+	for round := 0; round < keyCount; round++ {
+		result, err := e.keyGenRound(round, projectId)
 		if err != nil {
 			return nil, err
 		}
 		publicKeys = append(publicKeys, result.publicKey)
 		privateKeys = append(privateKeys, result.privateKey)
 		passphrases = append(passphrases, result.passphrase)
-		data = result.data
 	}
 
+	return &createProjectResult{
+		projectId:   projectId,
+		publicKeys:  publicKeys,
+		privateKeys: privateKeys,
+		passphrases: passphrases,
+	}, nil
+}
+
+func (e *EncrypterImpl) encrypt(publicKeys []string, inputData []byte) (*encryptResult, error) {
+	docId, err := e.idGen.GenerateID()
+	if err != nil {
+		return nil, err
+	}
+
+	data := inputData
+	for _, publicKey := range publicKeys {
+		data, err = e.encryptRound(publicKey, data)
+		if err != nil {
+			return nil, err
+		}
+	}
 	dataArmored, err := armor.ArmorWithType(data, constants.PGPMessageHeader)
 	if err != nil {
 		return nil, err
 	}
 
-	return &EncryptOutput{
-		projectID:   projectId,
-		docID:       docId,
-		publicKeys:  publicKeys,
-		privateKeys: privateKeys,
-		passphrases: passphrases,
-		data:        dataArmored,
+	return &encryptResult{
+		docId: docId,
+		data:  dataArmored,
 	}, nil
 }
 
 func (e *EncrypterImpl) encryptRound(publicKeyArmored string, inputData []byte) ([]byte, error) {
+	if len(inputData) == 0 {
+		return nil, nil
+	}
 	publicKey, err := crypto.NewKeyFromArmored(publicKeyArmored)
 	if err != nil {
 		return nil, err
-	}
-	return e.doEncrypt(publicKey, inputData)
-}
-
-func (e *EncrypterImpl) encryptRoundWithKeyGen(roundId int, projectId string, inputData []byte) (*encryptRoundWithKeyGenResult, error) {
-	passphrase, err := e.passGen.GeneratePassphrase(12)
-	if err != nil {
-		return nil, err
-	}
-	key, err := e.keyGen.GenerateKey(fmt.Sprintf("%v_%v", projectId, roundId), passphrase)
-	if err != nil {
-		return nil, err
-	}
-	publicKey, err := key.ToPublic()
-	if err != nil {
-		return nil, err
-	}
-	data, err := e.doEncrypt(publicKey, inputData)
-	if err != nil {
-		return nil, err
-	}
-	privateKeyArmored, err := key.Armor()
-	if err != nil {
-		return nil, err
-	}
-	publicKeyArmored, err := publicKey.Armor()
-	if err != nil {
-		return nil, err
-	}
-	return &encryptRoundWithKeyGenResult{
-		publicKey:  publicKeyArmored,
-		privateKey: privateKeyArmored,
-		passphrase: passphrase,
-		data:       data,
-	}, nil
-}
-
-func (e *EncrypterImpl) doEncrypt(publicKey *crypto.Key, inputData []byte) ([]byte, error) {
-	if len(inputData) == 0 {
-		return nil, nil
 	}
 	message := crypto.NewPlainMessage(inputData)
 	publicKeyRing, err := crypto.NewKeyRing(publicKey)
@@ -169,4 +156,28 @@ func (e *EncrypterImpl) doEncrypt(publicKey *crypto.Key, inputData []byte) ([]by
 	}
 
 	return result.Data, nil
+}
+
+func (e *EncrypterImpl) keyGenRound(roundId int, projectId string) (*keyGenRoundResult, error) {
+	passphrase, err := e.passGen.GeneratePassphrase(12)
+	if err != nil {
+		return nil, err
+	}
+	key, err := e.keyGen.GenerateKey(fmt.Sprintf("%v_%v", projectId, roundId), passphrase)
+	if err != nil {
+		return nil, err
+	}
+	privateKeyArmored, err := key.Armor()
+	if err != nil {
+		return nil, err
+	}
+	publicKeyArmored, err := key.GetArmoredPublicKey()
+	if err != nil {
+		return nil, err
+	}
+	return &keyGenRoundResult{
+		publicKey:  publicKeyArmored,
+		privateKey: privateKeyArmored,
+		passphrase: passphrase,
+	}, nil
 }
