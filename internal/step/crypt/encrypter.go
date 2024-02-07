@@ -24,12 +24,16 @@ type encryptRoundWithKeyGenResult struct {
 	data       []byte
 }
 
-func NewEncrypter() *EncrypterImpl {
+func NewEncrypter() (*EncrypterImpl, error) {
+	passGen, err := newPassphraseGenerator()
+	if err != nil {
+		return nil, err
+	}
 	return &EncrypterImpl{
 		keyGen:  newKeyGenerator(),
 		idGen:   newIDGenerator(),
-		passGen: newPassphraseGenerator(),
-	}
+		passGen: passGen,
+	}, nil
 }
 
 func (e *EncrypterImpl) EncryptNewProject(input EncryptNewProjectInput) (*EncryptNewProjectOutput, error) {
@@ -78,7 +82,7 @@ func (e *EncrypterImpl) EncryptNewProject(input EncryptNewProjectInput) (*Encryp
 }
 
 func (e *EncrypterImpl) roundWithKeyGen(roundId int, projectId string, inputData []byte) (*encryptRoundWithKeyGenResult, error) {
-	passphrase, err := e.passGen.GeneratePassphrase()
+	passphrase, err := e.passGen.GeneratePassphrase(12)
 	if err != nil {
 		return nil, err
 	}
