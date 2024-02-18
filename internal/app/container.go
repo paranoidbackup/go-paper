@@ -2,8 +2,8 @@ package app
 
 import (
 	"fmt"
-	"go-paper/go-paper/internal/infra/log"
 	"os"
+	"paranoidbackup/go-paper/internal/infra/log"
 	"runtime/debug"
 	"time"
 )

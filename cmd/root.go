@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"go-paper/go-paper/internal/app"
+	"paranoidbackup/go-paper/internal/app"
 
 	"github.com/spf13/cobra"
 )

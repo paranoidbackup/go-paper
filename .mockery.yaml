@@ -6,6 +6,6 @@ filename: "{{.MockName}}.go"
 outpkg: "mocks"
 dir: "mocks"
 packages:
-  go-paper/go-paper/internal/step/crypt:
+  paranoidbackup/go-paper/internal/step/crypt:
     config:
       all: True

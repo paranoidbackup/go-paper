@@ -1,4 +1,4 @@
-module go-paper/go-paper
+module paranoidbackup/go-paper
 
 go 1.21
 

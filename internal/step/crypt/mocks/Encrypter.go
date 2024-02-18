@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	crypt "go-paper/go-paper/internal/step/crypt"
+	crypt "paranoidbackup/go-paper/internal/step/crypt"
 
 	mock "github.com/stretchr/testify/mock"
 )
