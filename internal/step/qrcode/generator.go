@@ -16,7 +16,7 @@ func NewGenerator() (*GeneratorImpl, error) {
 func (g *GeneratorImpl) Generate(input Input) (*Output, error) {
 	privateKeysSplit := g.splitMulti(input.PrivateKeys())
 	dataSplit := g.split(input.Data())
-	
+
 	privateKeysQrCodesPng := make([][][]byte, 0)
 	dataQrCodesPng := make([][]byte, 0)
 
