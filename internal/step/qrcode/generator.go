@@ -1,6 +1,8 @@
 package qrcode
 
-import qrcode "github.com/skip2/go-qrcode"
+import "github.com/skip2/go-qrcode"
+
+const partialSize = 1000
 
 type Generator interface {
 	Generate(input Input) (*Output, error)
@@ -62,9 +64,33 @@ func (g *GeneratorImpl) encode(data string) ([]byte, error) {
 }
 
 func (g *GeneratorImpl) splitMulti(data []string) [][]string {
-	return nil
+	result := make([][]string, 0)
+	for _, v := range data {
+		result = append(result, g.split(v))
+	}
+	return result
 }
 
 func (g *GeneratorImpl) split(data string) []string {
-	return nil
+	runes := []rune(data)
+	result := make([]string, 0)
+
+	i := 0
+	for {
+		start := i
+		end := i + partialSize - 1
+		if end >= len(runes) {
+			end = len(runes) - 1
+		}
+		for end < len(runes)-1 && (string(runes[end]) == "\n" || string(runes[end]) == " ") {
+			end++
+		}
+		result = append(result, string(runes[start:end]))
+		if end == len(runes)-1 {
+			break
+		}
+		i = end + 1
+	}
+
+	return result
 }
