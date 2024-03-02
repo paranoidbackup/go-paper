@@ -56,7 +56,7 @@ func (g *GeneratorImpl) Generate(input Input) (*Output, error) {
 
 func (g *GeneratorImpl) encode(data string) ([]byte, error) {
 	var png []byte
-	png, err := qrcode.Encode(data, qrcode.Highest, 512)
+	png, err := qrcode.Encode(data, qrcode.Highest, 1024)
 	if err != nil {
 		return nil, err
 	}
