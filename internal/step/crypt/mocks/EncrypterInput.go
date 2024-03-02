@@ -69,7 +69,7 @@ func (_m *EncrypterInput) ProjectID() string {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("no return value specified for ProjectID")
+		panic("no return value specified for ID")
 	}
 
 	var r0 string
@@ -82,14 +82,14 @@ func (_m *EncrypterInput) ProjectID() string {
 	return r0
 }
 
-// EncrypterInput_DocID_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ProjectID'
+// EncrypterInput_DocID_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ID'
 type EncrypterInput_DocID_Call struct {
 	*mock.Call
 }
 
 // DocID is a helper method to define mock.On call
 func (_e *EncrypterInput_Expecter) DocID() *EncrypterInput_DocID_Call {
-	return &EncrypterInput_DocID_Call{Call: _e.mock.On("ProjectID")}
+	return &EncrypterInput_DocID_Call{Call: _e.mock.On("ID")}
 }
 
 func (_c *EncrypterInput_DocID_Call) Run(run func()) *EncrypterInput_DocID_Call {
@@ -159,7 +159,7 @@ func (_m *EncrypterInput) PublicKeys() []string {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("no return value specified for PublicKeys")
+		panic("no return value specified for Public")
 	}
 
 	var r0 []string
@@ -174,14 +174,14 @@ func (_m *EncrypterInput) PublicKeys() []string {
 	return r0
 }
 
-// EncrypterInput_PublicKeys_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'PublicKeys'
+// EncrypterInput_PublicKeys_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Public'
 type EncrypterInput_PublicKeys_Call struct {
 	*mock.Call
 }
 
 // PublicKeys is a helper method to define mock.On call
 func (_e *EncrypterInput_Expecter) PublicKeys() *EncrypterInput_PublicKeys_Call {
-	return &EncrypterInput_PublicKeys_Call{Call: _e.mock.On("PublicKeys")}
+	return &EncrypterInput_PublicKeys_Call{Call: _e.mock.On("Public")}
 }
 
 func (_c *EncrypterInput_PublicKeys_Call) Run(run func()) *EncrypterInput_PublicKeys_Call {

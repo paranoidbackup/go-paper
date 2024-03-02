@@ -1,11 +1,15 @@
 package document
 
-type HtmlExporter struct{}
-
-func NewHtmlExporter() *HtmlExporter {
-	return &HtmlExporter{}
+type HtmlExporter struct {
+	workDir string
 }
 
-func (e *HtmlExporter) Export(input ExporterInput, destinationDir string) error {
+func NewHtmlExporter(workDir string) (*HtmlExporter, error) {
+	return &HtmlExporter{
+		workDir: workDir,
+	}, nil
+}
+
+func (e *HtmlExporter) Export(input ExporterInput) error {
 	return nil
 }
