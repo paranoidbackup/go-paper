@@ -1,9 +1,8 @@
 package cmd
 
 import (
-	"paranoidbackup/go-paper/internal/app"
-
 	"github.com/spf13/cobra"
+	"paranoidbackup/go-paper/internal/di"
 )
 
 var (
@@ -11,11 +10,13 @@ var (
 		Use:   "go-paper",
 		Short: "go-paper",
 		Run: func(cmd *cobra.Command, args []string) {
-			app, err := app.Bootstrap()
+			app, err := di.Bootstrap("")
 			if err != nil {
 				panic(err)
 			}
 			defer app.HandlePanic()
+
+			app.BackupTask() // TODO: call method here
 
 			app.Halt()
 		},
