@@ -18,47 +18,47 @@ type Container struct {
 }
 
 func Bootstrap() (*Container, error) {
-	var self Container
+	var c Container
 	var err error
 
 	if err != nil {
 		return nil, err
 	}
 
-	return self.doBootstrap()
+	return c.doBootstrap()
 }
 
-func (self *Container) Halt() {
+func (c *Container) Halt() {
 	os.Exit(0)
 }
 
-func (self *Container) HandlePanic() {
+func (c *Container) HandlePanic() {
 	fmt.Printf("PANIC: %s\n\n%s\n", recover(), string(debug.Stack()))
 	time.Sleep(time.Second * 10)
 	os.Exit(1)
 }
 
-func (self *Container) doBootstrap() (*Container, error) {
+func (c *Container) doBootstrap() (*Container, error) {
 	var err error
 
-	err = self.bootstrapInfraLayer()
+	err = c.bootstrapInfraLayer()
 	if err != nil {
 		return nil, err
 	}
-	err = self.bootstrapServiceLayer()
+	err = c.bootstrapServiceLayer()
 	if err != nil {
 		return nil, err
 	}
 
-	return self, nil
+	return c, nil
 }
 
-func (self *Container) bootstrapInfraLayer() error {
-	self.infraLayer.logger = log.NewLogger(log.InfoLevel)
+func (c *Container) bootstrapInfraLayer() error {
+	c.infraLayer.logger = log.NewLogger(log.InfoLevel)
 	return nil
 }
 
-func (self *Container) bootstrapServiceLayer() error {
+func (c *Container) bootstrapServiceLayer() error {
 	var err error
 
 	if err != nil {
