@@ -1,0 +1,54 @@
+{{- /*gotype: paranoidbackup/go-paper/internal/step/document.PageData*/ -}}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Project: {{.ProjectID}}, Document: {{.DocID}}</title>
+    <style type="text/css">
+        @media print {
+            .pagebreak {
+                clear: both;
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+
+{{range $index, $path := .DataQrCodesPaths}}
+    <b>Project: {{.ProjectID}}</b><br />
+    <b>Document: {{.DocID}}</b>
+    <hr>
+    <h1>Data QR code {{$index}}</h1>
+    <img src="{{$path}}" alt="Data QR code {{$index}}">
+    <hr>
+    <div class="pagebreak"> </div>
+{{end}}
+
+{{range $keyNumber, $privKey := .PrivateKeysQrCodesPaths}}
+    {{range $qrCodeIndex, $path := $privKey}}
+        <b>Project: {{.ProjectID}}</b><br />
+        <b>Document: {{.DocID}}</b>
+        <hr>
+        <h1>Private Key {{$keyNumber}}, QR code {{$qrCodeIndex}}</h1>
+        <img src="{{$path}}" alt="Private Key {{$keyNumber}}, QR code {{$qrCodeIndex}}">
+        <hr>
+        <div class="pagebreak"> </div>
+    {{end}}
+{{end}}
+
+{{range $index, $passphrase := .Passphrases}}
+    <b>Project: {{.ProjectID}}</b><br />
+    <b>Document: {{.DocID}}</b>
+    <hr>
+    <h1>Passphrase {{$index}}</h1>
+    <pre>
+        {{$passphrase}}
+    </pre>
+    <hr>
+    <div class="pagebreak"> </div>
+{{end}}
+
+</body>
+</html>
