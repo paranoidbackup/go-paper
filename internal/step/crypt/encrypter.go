@@ -13,9 +13,10 @@ type Encrypter interface {
 }
 
 type EncrypterImpl struct {
-	keyGen  KeyGenerator
-	idGen   IDGenerator
-	passGen PassphraseGenerator
+	newProjectKeyCount int
+	keyGen             KeyGenerator
+	idGen              IDGenerator
+	passGen            PassphraseGenerator
 }
 
 type keyGenRoundResult struct {
@@ -36,15 +37,16 @@ type createProjectResult struct {
 	passphrases []string
 }
 
-func NewEncrypter() (*EncrypterImpl, error) {
+func NewEncrypter(newProjectKeyCount int) (*EncrypterImpl, error) {
 	passGen, err := newPassphraseGenerator()
 	if err != nil {
 		return nil, err
 	}
 	return &EncrypterImpl{
-		keyGen:  newKeyGenerator(),
-		idGen:   newIDGenerator(),
-		passGen: passGen,
+		newProjectKeyCount: newProjectKeyCount,
+		keyGen:             newKeyGenerator(),
+		idGen:              newIDGenerator(),
+		passGen:            passGen,
 	}, nil
 }
 
@@ -62,7 +64,7 @@ func (e *EncrypterImpl) Encrypt(input EncryptInput) (*EncryptOutput, error) {
 }
 
 func (e *EncrypterImpl) EncryptNewProject(input EncryptNewProjectInput) (*EncryptOutput, error) {
-	project, err := e.createProject(input.KeyCount())
+	project, err := e.createProject(e.newProjectKeyCount)
 	if err != nil {
 		return nil, err
 	}

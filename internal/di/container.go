@@ -93,7 +93,7 @@ func (c *Container) bootstrapStepLayer() error {
 	if err != nil {
 		return err
 	}
-	c.stepLayer.encrypter, err = crypt.NewEncrypter()
+	c.stepLayer.encrypter, err = crypt.NewEncrypter(c.config.NewProjectKeyCount)
 	if err != nil {
 		return err
 	}
@@ -112,7 +112,13 @@ func (c *Container) bootstrapStepLayer() error {
 func (c *Container) bootstrapTaskLayer() error {
 	var err error
 
-	c.taskLayer.backupTask, err = task.NewBackupTask()
+	c.taskLayer.backupTask, err = task.NewBackupTask(
+		c.infraLayer.logger,
+		c.stepLayer.projectRepo,
+		c.stepLayer.encrypter,
+		c.stepLayer.qrCodeGenerator,
+		c.stepLayer.documentExporter,
+	)
 	if err != nil {
 		return err
 	}

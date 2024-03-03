@@ -13,7 +13,8 @@ import (
 var configDataDev string
 
 type Config struct {
-	WorkDir string `yaml:"workDir"`
+	WorkDir            string `yaml:"workDir"`
+	NewProjectKeyCount int    `yaml:"newProjectKeyCount"`
 }
 
 func loadConfig() (Config, error) {
