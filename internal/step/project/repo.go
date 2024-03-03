@@ -2,7 +2,6 @@ package project
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"os"
 )
@@ -45,7 +44,7 @@ func (r *RepoImpl) SavePublic(project PublicProject) error {
 	if err != nil {
 		return err
 	}
-	err = r.mkdir(fmt.Sprintf("%v/projects-public", r.workDir))
+	err = os.MkdirAll(fmt.Sprintf("%v/projects-public", r.workDir), os.ModePerm)
 	if err != nil {
 		return err
 	}
@@ -63,19 +62,9 @@ func (r *RepoImpl) SavePrivate(project PrivateProject) error {
 	if err != nil {
 		return err
 	}
-	err = r.mkdir(fmt.Sprintf("%v/projects-private", r.workDir))
+	err = os.MkdirAll(fmt.Sprintf("%v/projects-private", r.workDir), os.ModePerm)
 	if err != nil {
 		return err
 	}
 	return os.WriteFile(fmt.Sprintf("%v/projects-private/private-%v.json", r.workDir, entity.ID), data, os.ModePerm)
-}
-
-func (r *RepoImpl) mkdir(path string) error {
-	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
-		err := os.Mkdir(path, os.ModePerm)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
 }
