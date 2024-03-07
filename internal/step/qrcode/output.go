@@ -3,7 +3,6 @@ package qrcode
 type Output struct {
 	projectId             string
 	docId                 string
-	docName               string
 	publicKeys            []string
 	passphrases           []string
 	privateKeysSplit      [][]string
@@ -17,9 +16,6 @@ func (o *Output) ProjectID() string {
 }
 func (o *Output) DocID() string {
 	return o.docId
-}
-func (o *Output) DocName() string {
-	return o.docName
 }
 func (o *Output) PublicKeys() []string {
 	return o.publicKeys

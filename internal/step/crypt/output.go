@@ -3,7 +3,6 @@ package crypt
 type EncryptOutput struct {
 	projectID   string
 	docID       string
-	docName     string
 	publicKeys  []string
 	privateKeys []string
 	passphrases []string
@@ -15,9 +14,6 @@ func (b *EncryptOutput) ProjectID() string {
 }
 func (b *EncryptOutput) DocID() string {
 	return b.docID
-}
-func (b *EncryptOutput) DocName() string {
-	return b.docName
 }
 func (b *EncryptOutput) PublicKeys() []string {
 	return b.publicKeys
