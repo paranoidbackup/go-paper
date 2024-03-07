@@ -7,6 +7,9 @@ import (
 	"github.com/ProtonMail/gopenpgp/v2/crypto"
 )
 
+const version = "go-paper 0.1.0"
+const comment = ""
+
 type Encrypter interface {
 	Encrypt(input EncryptInput) (*EncryptOutput, error)
 	EncryptNewProject(input EncryptNewProjectInput) (*EncryptOutput, error)
@@ -131,8 +134,8 @@ func (e *EncrypterImpl) encrypt(publicKeys []string, inputData []byte) (*encrypt
 	dataArmored, err := armor.ArmorWithTypeAndCustomHeaders(
 		data,
 		constants.PGPMessageHeader,
-		"go-paper 0.1.0",
-		"",
+		version,
+		comment,
 	)
 	if err != nil {
 		return nil, err
@@ -174,11 +177,11 @@ func (e *EncrypterImpl) keyGenRound(roundId int, projectId string) (*keyGenRound
 	if err != nil {
 		return nil, err
 	}
-	privateKeyArmored, err := key.Armor()
+	privateKeyArmored, err := key.ArmorWithCustomHeaders(comment, version)
 	if err != nil {
 		return nil, err
 	}
-	publicKeyArmored, err := key.GetArmoredPublicKey()
+	publicKeyArmored, err := key.GetArmoredPublicKeyWithCustomHeaders(comment, version)
 	if err != nil {
 		return nil, err
 	}
