@@ -1,11 +1,15 @@
 package task
 
 type Input struct {
+	docName    string
 	projectId  string
 	publicKeys []string
 	data       []byte
 }
 
+func (i *Input) DocName() string {
+	return i.docName
+}
 func (i *Input) Data() []byte {
 	return i.data
 }

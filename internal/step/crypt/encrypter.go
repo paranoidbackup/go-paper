@@ -58,6 +58,7 @@ func (e *EncrypterImpl) Encrypt(input EncryptInput) (*EncryptOutput, error) {
 	return &EncryptOutput{
 		projectID:  input.ProjectID(),
 		docID:      result.docId,
+		docName:    input.DocName(),
 		publicKeys: input.PublicKeys(),
 		data:       result.data,
 	}, nil
@@ -76,6 +77,7 @@ func (e *EncrypterImpl) EncryptNewProject(input EncryptNewProjectInput) (*Encryp
 	return &EncryptOutput{
 		projectID:   project.projectId,
 		docID:       encryptRes.docId,
+		docName:     input.DocName(),
 		publicKeys:  project.publicKeys,
 		privateKeys: project.privateKeys,
 		passphrases: project.passphrases,

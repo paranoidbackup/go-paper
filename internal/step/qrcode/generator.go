@@ -45,6 +45,7 @@ func (g *GeneratorImpl) Generate(input Input) (*Output, error) {
 	return &Output{
 		projectId:             input.ProjectID(),
 		docId:                 input.DocID(),
+		docName:               input.DocName(),
 		publicKeys:            input.PublicKeys(),
 		passphrases:           input.Passphrases(),
 		privateKeysSplit:      privateKeysSplit,
