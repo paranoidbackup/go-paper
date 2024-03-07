@@ -128,7 +128,12 @@ func (e *EncrypterImpl) encrypt(publicKeys []string, inputData []byte) (*encrypt
 			return nil, err
 		}
 	}
-	dataArmored, err := armor.ArmorWithType(data, constants.PGPMessageHeader)
+	dataArmored, err := armor.ArmorWithTypeAndCustomHeaders(
+		data,
+		constants.PGPMessageHeader,
+		"go-paper 0.1.0",
+		"",
+	)
 	if err != nil {
 		return nil, err
 	}
