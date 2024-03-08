@@ -72,6 +72,7 @@ func (e *HtmlExporter) Export(input ExporterInput) error {
 	pageData := PageData{
 		ProjectID:               input.ProjectID(),
 		DocID:                   input.DocID(),
+		DocName:                 input.DocName(),
 		Passphrases:             input.Passphrases(),
 		PrivateKeysQrCodesPaths: privateKeysQrCodesPaths,
 		DataQrCodesPaths:        dataQrCodesPaths,

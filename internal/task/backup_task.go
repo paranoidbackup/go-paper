@@ -7,6 +7,7 @@ import (
 	"paranoidbackup/go-paper/internal/step/document"
 	"paranoidbackup/go-paper/internal/step/project"
 	"paranoidbackup/go-paper/internal/step/qrcode"
+	"path"
 )
 
 type BackupTask struct {
@@ -37,6 +38,7 @@ func (t *BackupTask) BackupWithNewProject(dataPath string) error {
 	var input Input
 	var err error
 
+	input.docName = path.Base(dataPath)
 	input.data, err = os.ReadFile(dataPath)
 	if err != nil {
 		return err

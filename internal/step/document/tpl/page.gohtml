@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Project: {{.ProjectID}}, Document: {{.DocID}}</title>
+    <title>Project: {{.ProjectID}}, Document: {{.DocID}}, File: {{.DocName}}</title>
     <style type="text/css">
         @media print {
             .pagebreak {
@@ -20,9 +20,10 @@
 
 {{range $index, $path := .DataQrCodesPaths}}
     <b>Project: {{$doc.ProjectID}}</b><br />
-    <b>Document: {{$doc.DocID}}</b>
+    <b>Document: {{$doc.DocID}}</b><br />
+    <b>File: {{$doc.DocName}}</b>
     <hr>
-    <h1>Data QR code {{$index}}</h1>
+    <h1>{{$doc.DocName}}: Data QR code {{$index}}</h1>
     <img src="{{$path}}" alt="Data QR code {{$index}}">
     <hr>
     <div class="pagebreak"> </div>
@@ -31,9 +32,10 @@
 {{range $keyNumber, $privKey := .PrivateKeysQrCodesPaths}}
     {{range $qrCodeIndex, $path := $privKey}}
         <b>Project: {{$doc.ProjectID}}</b><br />
-        <b>Document: {{$doc.DocID}}</b>>
+        <b>Document: {{$doc.DocID}}</b><br />
+        <b>File: {{$doc.DocName}}</b>
         <hr>
-        <h1>Private Key {{$keyNumber}}, QR code {{$qrCodeIndex}}</h1>
+        <h1>{{$doc.DocName}}: Private Key {{$keyNumber}}, QR code {{$qrCodeIndex}}</h1>
         <img src="{{$path}}" alt="Private Key {{$keyNumber}}, QR code {{$qrCodeIndex}}">
         <hr>
         <div class="pagebreak"> </div>
@@ -42,12 +44,14 @@
 
 {{range $index, $passphrase := .Passphrases}}
     <b>Project: {{$doc.ProjectID}}</b><br />
-    <b>Document: {{$doc.DocID}}</b>
+    <b>Document: {{$doc.DocID}}</b><br />
+    <b>File: {{$doc.DocName}}</b>
     <hr>
-    <h1>Passphrase {{$index}}</h1>
-    <pre>
+    <h1>{{$doc.DocName}}: Passphrase {{$index}} - do not scan it, type manually!</h1>
+    <hr>
+    <h1>
         {{$passphrase}}
-    </pre>
+    </h1>
     <hr>
     <div class="pagebreak"> </div>
 {{end}}
