@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Project: {{.ProjectID}}, Document: {{.DocID}}, File: {{.DocName}}</title>
+    <title>Paper backup</title>
     <style type="text/css">
         @media print {
             .pagebreak {
@@ -23,7 +23,7 @@
     <b>Document: {{$doc.DocID}}</b><br />
     <b>File: {{$doc.DocName}}</b>
     <hr>
-    <h1>{{$doc.DocName}}: Data QR code {{$index}}</h1>
+    <h1>Data {{$index}}</h1>
     <img src="{{$path}}" alt="Data QR code {{$index}}">
     <hr>
     <div class="pagebreak"> </div>
@@ -32,11 +32,9 @@
 {{range $keyNumber, $privKey := .PrivateKeysQrCodesPaths}}
     {{range $qrCodeIndex, $path := $privKey}}
         <b>Project: {{$doc.ProjectID}}</b><br />
-        <b>Document: {{$doc.DocID}}</b><br />
-        <b>File: {{$doc.DocName}}</b>
         <hr>
-        <h1>{{$doc.DocName}}: Private Key {{$keyNumber}}, QR code {{$qrCodeIndex}}</h1>
-        <img src="{{$path}}" alt="Private Key {{$keyNumber}}, QR code {{$qrCodeIndex}}">
+        <h1>Key {{$keyNumber}}, QR code {{$qrCodeIndex}}</h1>
+        <img src="{{$path}}" alt="Key {{$keyNumber}}, QR code {{$qrCodeIndex}}">
         <hr>
         <div class="pagebreak"> </div>
     {{end}}
@@ -44,10 +42,8 @@
 
 {{range $index, $passphrase := .Passphrases}}
     <b>Project: {{$doc.ProjectID}}</b><br />
-    <b>Document: {{$doc.DocID}}</b><br />
-    <b>File: {{$doc.DocName}}</b>
     <hr>
-    <h1>{{$doc.DocName}}: Passphrase {{$index}} - do not scan it, type manually!</h1>
+    <h1>Passphrase {{$index}} - do not scan it, type manually!</h1>
     <hr>
     <h1>
         {{$passphrase}}
