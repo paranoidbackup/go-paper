@@ -73,6 +73,7 @@ func (e *HtmlExporter) Export(input ExporterInput) error {
 		ProjectID:               input.ProjectID(),
 		DocID:                   input.DocID(),
 		DocName:                 input.DocName(),
+		DocDate:                 time.Now().Format("2006-01-02"),
 		Passphrases:             input.Passphrases(),
 		PrivateKeysQrCodesPaths: privateKeysQrCodesPaths,
 		DataQrCodesPaths:        dataQrCodesPaths,

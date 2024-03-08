@@ -21,7 +21,7 @@
 {{range $index, $path := .DataQrCodesPaths}}
     <b>Project: {{$doc.ProjectID}}</b><br />
     <b>Document: {{$doc.DocID}}</b><br />
-    <b>File: {{$doc.DocName}}</b>
+    <b>File: {{$doc.DocName}} ({{$doc.DocDate}})</b>
     <hr>
     <h1>Data {{$index}}</h1>
     <img src="{{$path}}" alt="Data QR code {{$index}}">
@@ -43,7 +43,7 @@
 {{range $index, $passphrase := .Passphrases}}
     <b>Project: {{$doc.ProjectID}}</b><br />
     <hr>
-    <h1>Passphrase {{$index}} - do not scan it, type manually!</h1>
+    <h1>Passphrase {{$index}} - DO NOT SCAN IT, TYPE IT MANUALLY ON OFFLINE MACHINE!</h1>
     <hr>
     <h1>
         {{$passphrase}}
